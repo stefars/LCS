@@ -19,12 +19,18 @@ I.E:
   (A=>(B^C))
   If A is False, the program won't compute (B^C) and will just directly give the result (True)
   How it should normally look:
+  
   A B C (B^C) (A=>(B^C))
+  
   F T F   F       T <-Final Result
+  
 
   How it actually looks:
+  
   A B C (B^C) (A=>(B^C))
+  
   F T F   T <- Final Result
+  
   
   Due to that, the table could be considered incomplete, but it is readable if the concept is grasped.
   The table, is not 100% accurate, but the end result is, there are still bugs to fix.
