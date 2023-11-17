@@ -1,3 +1,8 @@
+import pandas as pd
+
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
+pd.set_option('display.width', None)
 
 symbols = ['<','>','=','!','v','^','(',')','⇒','∧','¬','∨','⇔',"⊥","⊤"]
 
@@ -14,6 +19,10 @@ def steps_skip(s,v):
                         s_[j] = ' '
                         v.append(i-j+1)
                         break
+
+
+
+
 
 def initialize(z,skips,var):
 
@@ -183,11 +192,15 @@ def interp(s,itrp,lest):
 
     if s[0] in symbols:
         if s[0] in "⇒>":
-            rez = (interp(s[1],itrp,lest) and interp(s[2],itrp,lest) or not interp(s[1],itrp,lest))
+            rez1 = interp(s[1],itrp,lest)
+            rez2 = interp(s[2],itrp,lest)
+            rez = (rez1 and rez2 ) or not interp(s[1],itrp,lest)
             lest.append(rez)
             return rez
         if s[0] in "∧^":
-            rez = (interp(s[1],itrp,lest) and interp(s[2],itrp,lest))
+            rez1 = interp(s[1],itrp,lest)
+            rez2 = interp(s[2],itrp,lest)
+            rez = rez1 and rez2
             lest.append(rez)
             return rez
         if s[0] in "!¬":
@@ -195,7 +208,10 @@ def interp(s,itrp,lest):
             lest.append(rez)
             return rez
         if s[0] in "∨v":
-            rez = (interp(s[1], itrp, lest) or interp(s[2], itrp, lest))
+            rez1 = interp(s[1], itrp, lest)
+            rez2 = interp(s[2], itrp, lest)
+            rez = rez1 or rez2
+
             lest.append(rez)
             return rez
         if s[0] in "⇔=":
@@ -243,24 +259,24 @@ def da(var,x,z):
     lest = [[]]
     result_val = []
     o = len(var) + nr_operations(x)
-    for i in range(o):
-        lest[0].append(i)
-    lest.append([])
+    #for i in range(o):
+        #lest[0].append(i)
+    #lest.append([])
     l=0
     nr_var = 0
     for i in var:
         if i in "⊤⊥":
             l+=1
         nr_var += 1
-        lest[1].append(i)
+        lest[0].append(i)
 
 
-    table(z, var, lest[1])
+    table(z, var, lest[0])
 
     model = "0:0{}b".format(nr_var-l)
     model = "{" + model + "}"
 
-    k = 1
+    k = 0
     for i in range(2 ** int(nr_var-l)):
         k += 1
         lest.append([])
@@ -273,7 +289,6 @@ def da(var,x,z):
             elif var[i] == "0" or var[i] == "F" or var[i] == False:
                 var[i] = False
                 lest[k].append(var[i])
-        lest[k].append("|")
 
         result = interp(z, var, lest[k])
         result_val.append(result)
@@ -359,23 +374,26 @@ while(True):
 
         temp = da(var,x,z)
 
-        for i in temp[0]:
-            print(i)
+        print(pd.DataFrame(temp[0]))
+        #for i in temp[0]:
+            #print(i)
+        print()
         j = temp[1][0]
+
         i=0
         while i < len(temp[1])-1:
             if temp[1][i] == temp[1][i+1]:
                 i+=1
                 continue
             else:
-                print("The proposition is satisfiable")
+                print("The proposition is satisfiable\n")
                 break
         else:
             if j:
-                print("The proposition is valid")
+                print("The proposition is valid\n")
             else:
-                print("The proposition is unsatisfiable")
-
+                print("The proposition is unsatisfiable\n")
+    # Logical Equivalence
     elif y == 4:
         l_eq = [0,0]
         print("Insert two propositions:")
@@ -396,10 +414,6 @@ while(True):
 
     elif y == 5:
         exit()
-
-
-
-
 
 
 
