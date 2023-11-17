@@ -15,9 +15,17 @@ Curretly there are 4 available options:
 
 
 #Table updated with Pandas library, fixed lazy operations.
+#Fixed the Contradiction/Tautology issue.
 
 Known issues:
-  F=>F ~ T  or any operations similar won't work due to the fact that the number of results for F=>F is 2 and T has only one result. (Difference in the amount of results)
+  For Logical Equivalenge, in distribution, the order of atomic propozitions changes, hence the result is different than the one expected
+  (FvG)=>H has the order F,G,H
+  But (F=>H) ^ (G=>H) has the order F,H,G
+  So the end result even if it's correct, it's different for the verification I'm doing.
+
+
+  Not all steps are included, if needed, I could add them hopefuly.
+  
   
   The program only works for strong syntax.
   Relaxed syntax is wip.
