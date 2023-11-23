@@ -52,13 +52,16 @@ def nr_operations(s):
             v += 1
     return v
 
-# Automatically adds values to var dictionary
+
 def auto_dic(bin,dic):
+    """Automatically adds values to var dictionary.
+        Maps the binary value (bin) to it's corresponding variable in (var), considering order:
+        (000) -> (ABC); All 0's, (001) -> (ABC); C = 1, A = B = 0 and so on."""
     o = -1
     for i in dic:
         if i in "⊥⊤":
             break
-        o+=1
+        o += 1
         dic[i] = bin[o]
 
 
@@ -150,6 +153,8 @@ def rec(prop,output,prop_pos,skips,i,l_r,var):
         rec(prop, output, prop_pos + 1, skips, p, l_r+1,var)
         return
 
+
+
     #VAR + symbol
     if (prop[prop_pos] in "⊥⊤" or prop[prop_pos] not in symbols) and prop[prop_pos + 1] in symbols and prop[prop_pos+1] not in "!()":
         output[0] = prop[prop_pos+1]
@@ -192,9 +197,9 @@ def interp(s,itrp,lest):
 
     if s[0] in symbols:
         if s[0] in "⇒>":
-            rez1 = interp(s[1],itrp,lest)
+            rez1 = not interp(s[1],itrp,lest)
             rez2 = interp(s[2],itrp,lest)
-            rez = (rez1 and rez2 ) or not interp(s[1],itrp,lest)
+            rez = (rez1 or rez2 )
             lest.append(rez)
             return rez
         if s[0] in "∧^":
@@ -248,36 +253,28 @@ def table(s,itrp,z):
             return w
 
 
-def da(var,x,z):
-    for i in var.copy():
-        if i in "⊤⊥":
-            var.pop(i)
-            if i == "⊥":
-                var[i] = "F"
-            else:
-                var[i] = "T"
+def da(var,z):
     lest = [[]]
     result_val = []
-    o = len(var) + nr_operations(x)
     #for i in range(o):
         #lest[0].append(i)
     #lest.append([])
-    l=0
     nr_var = 0
     for i in var:
         if i in "⊤⊥":
-            l+=1
+            nr_var-=1
         nr_var += 1
         lest[0].append(i)
 
 
     table(z, var, lest[0])
 
-    model = "0:0{}b".format(nr_var-l)
+    #Make a binary number containing exactly nr_var elements.
+    model = "0:0{}b".format(nr_var)
     model = "{" + model + "}"
 
     k = 0
-    for i in range(2 ** int(nr_var-l)):
+    for i in range(2 ** int(nr_var)):
         k += 1
         lest.append([])
 
@@ -371,16 +368,18 @@ while(True):
         x = initialize(z,skips,var)
         if len(x) == 1:
             z = [x]
+        temp = da(var,z)
 
-        temp = da(var,x,z)
+        #Panda Table
+        df = pd.DataFrame(temp[0][1:])
+        df.columns = temp[0][0]
+        print(df)
 
-        print(pd.DataFrame(temp[0]))
-        #for i in temp[0]:
-            #print(i)
-        print()
+
         j = temp[1][0]
 
         i=0
+
         while i < len(temp[1])-1:
             if temp[1][i] == temp[1][i+1]:
                 i+=1
@@ -403,17 +402,33 @@ while(True):
             skips = []
             var = {}
             x = initialize(z,skips,var)
+            var = dict(sorted(var.items()))
             if len(x) == 1:
                 z = [x]
-            l_eq[i] = da(var, x, z)[1]
+
+            l_eq[i] = da(var, z)[1]
+        a = len(l_eq[0])
+        b = len(l_eq[1])
+        if b == 1:
+            for i in range (a-1):
+                l_eq[1].append(l_eq[1][0])
+        if a == 1:
+            for i in range (b-1):
+                l_eq[0].append(l_eq[0][0])
+
         if l_eq[0] == l_eq[1]:
             print("The two propositions are logically equivalent")
         else:
             print("The propositions are not logically equivalent")
 
-
     elif y == 5:
         exit()
+
+
+"""
+    (F v (F^G)) ~ F
+"""
+
 
 
 
