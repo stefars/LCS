@@ -1,7 +1,7 @@
 # LCS
 For LCS homework
 
-To use the program, copy + paste into your python interpreter.
+To use the program, install pandas library and copy + paste the program into your python interpreter.
 
 Curretly there are 4 available options:
 
