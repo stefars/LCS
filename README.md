@@ -15,18 +15,18 @@ Curretly there are 4 available options:
 
 
 #Table updated with Pandas library, fixed lazy operations.
-#Fixed the Contradiction/Tautology issue.
+#Fixed the Contradiction/Tautology issue. (Anihilation Laws)
+#Fixed ordered atomic proposition in table
 
 Known issues:
-  For Logical Equivalenge, in distribution, the order of atomic propozitions changes, hence the result is different than the one expected
-  (FvG)=>H has the order F,G,H
-  But (F=>H) ^ (G=>H) has the order F,H,G
-  So the end result even if it's correct, it's different for the verification I'm doing.
+Reduction laws don't hold due to the difference in tables sizes and the use of the anihilation law module.
+  
 
 
   Not all steps are included, if needed, I could add them hopefuly.
   
   
   The program only works for strong syntax.
+  (To run the program, pandas library needs to be installed)
   Relaxed syntax is wip.
   
